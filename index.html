@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <title>Histórias Verdadeiras e Muito Aumentadas de Antonella</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FF8A5B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Antonella">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -176,7 +185,12 @@
 
 <button class="home-btn" id="homeBtn" title="Voltar ao menu">&#8962;</button>
 <div class="top-controls">
+  <button class="icon-btn" id="installBtn" title="Instalar app" style="display:none;">&#8681;</button>
   <button class="icon-btn" id="fsBtn" title="Tela cheia">&#10021;</button>
+</div>
+<div id="iosHint" style="display:none; position:fixed; left:16px; right:16px; bottom:70px; z-index:30; background:rgba(20,15,20,.92); color:#fff; padding:14px 16px; border-radius:14px; font-family:'Quicksand',sans-serif; font-size:13px; line-height:1.5; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.4);">
+  Pra instalar: toque em <strong>Compartilhar</strong> <span style="font-size:15px;">&#8679;</span> e depois em <strong>"Adicionar à Tela de Início"</strong>.
+  <div style="margin-top:8px;"><button id="iosHintClose" style="background:rgba(255,255,255,.15); border:none; color:#fff; padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer;">entendi</button></div>
 </div>
 <div class="progress-dots" id="dots"></div>
 
@@ -496,6 +510,40 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowRight') next();
   if(e.key==='ArrowLeft') prev();
 });
+
+/* ---- PWA: registrar service worker ---- */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+/* ---- PWA: botao de instalar (Android/Chrome/Edge) ---- */
+let deferredPrompt = null;
+const installBtn = document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'flex';
+});
+installBtn.addEventListener('click', async ()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+});
+window.addEventListener('appinstalled', ()=>{ installBtn.style.display='none'; });
+
+/* ---- PWA: dica manual pra iPhone/iPad (Safari nao tem beforeinstallprompt) ---- */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const iosHint = document.getElementById('iosHint');
+if(isIOS && !isStandalone){
+  installBtn.style.display = 'flex';
+  installBtn.addEventListener('click', ()=>{ iosHint.style.display='block'; });
+  document.getElementById('iosHintClose').addEventListener('click', ()=>{ iosHint.style.display='none'; });
+}
 
 /* ---- fullscreen ---- */
 const fsBtn = document.getElementById('fsBtn');
