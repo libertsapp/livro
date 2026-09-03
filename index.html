@@ -282,30 +282,47 @@ function fantasyCoverFallback(){
 /* ============ Page definitions ============ */
 const KIKA_TEXTS = [
   {kicker:'uma aventura (quase) verdadeira', heading:'A Fuga de Kika<br>e Pretinho', byline:'contada por Antonella'},
-  'Era uma tarde ensolarada e preguiçosa, dessas que o bairro inteiro parece estar cochilando. Mas dentro de casa, Kika e Pretinho já planejavam a maior aventura do dia. — Shiu... o portão está entreaberto — sussurrou Kika.',
-  'Antonella estava distraída perto da garagem. Pretinho puxou um cobertor velho com o focinho e, num empurrão desastrado, jogou tudo em cima da cabeça dela! — Iiiihhh! — gritou ela. Enquanto isso, Kika terminou de abrir o portão.',
-  '— Agora! — rosnou Kika baixinho. E os dois saíram disparados, rindo aquela risadinha de cachorro feliz, fazendo as caretas mais engraçadas do mundo.',
-  'Pela rua afora a bagunça começou de verdade. Kika, do tamanho de um chinelo, virou uma guerreira: enfrentava cada cachorro que aparecia, e todos saíam de fininho, abanando o rabo, confusos.',
-  'Já Pretinho... esbarrava nos postes, tropeçava nas próprias patas e rodava no meio da rua feito uma barata tonta. — Kika! Cadê a gente?! — perguntava ele, ofegante, quase batendo numa lixeira.',
-  'Os dois latiram pros passarinhos, perseguiram folhas ao vento, rolaram na grama e cheiraram cada poste umas quatro vezes. — Nunca mais vamos voltar! — combinaram, sentados no meio-fio. — Vamos ser livres pra sempre! — completou Kika.',
-  'Mas o sol foi baixando, e o cheirinho de ração começou a flutuar no vento. As barrigas dos dois fizeram: glu... glu... glu...',
-  '— Pai, olha! — gritou Antonella, vendo Kika brigando com coragem minúscula, e Pretinho parado no meio da bagunça, no mundo da lua. Abriram a porta do carro e puxaram Pretinho pra dentro. — Vem cá, seu desastrado!',
-  'Kika, veloz como um raio pequenino, ultrapassou o carro e chegou em casa primeiro. Quando a porta abriu, lá estava ela, sentadinha, com a carinha mais inocente do mundo. — Oi? Aconteceu alguma coisa?',
-  'Segundos depois, Pretinho desceu todo desengonçado, também fingindo a maior inocência do planeta. Quando os potinhos de ração apareceram, os dois foram direto: croc, croc, croc.',
-  {heading:'Fim', note:'Antonella balançou a cabeça e não conseguiu ficar brava — só riu baixinho.<br><br>Agora fecha os olhinhos também... e sonha com aventuras bem engraçadas.<br>Boa noite. 🌙🐶🐶'}
+  'Era uma tarde ensolarada e preguiçosa, daquelas em que o vento balança as folhas e o bairro inteiro parece estar cochilando. Mas dentro de casa, os dois bandoleiros de quatro patas já planejavam a maior aventura do dia. — Shiu... o portão está entreaberto — sussurrou Kika.',
+  'Antonella estava distraída perto da garagem. Pretinho, todo empolgado e desastrado, puxou com o focinho um cobertor velho e mofado e, com um empurrão meio torto, jogou tudo em cima dela! — Iiiihhh! — gritou ela, se enrolando no pano. Enquanto isso, Kika terminou de abrir o portão.',
+  '— Agora! — rosnou Kika baixinho. Os dois saíram disparados, rindo aquela risadinha de cachorro feliz — e ainda fizeram uma banana com as patas pra Antonella: língua de fora, olhos tortos, orelhas de avião. Pretinho quase caiu de lado de tanto rir.',
+  'Pela rua afora a bagunça começou de verdade. Kika, apesar de ser do tamanho de um chinelo, virou uma verdadeira guerreira: cada cachorro que aparecia, ela ia lá e enfrentava. Os outros saíam de fininho, abanando o rabo, surpresos com tanta coragem numa bolinha de pelo tão pequena.',
+  'Já Pretinho... ai, Pretinho. Esbarrava nos postes, tropeçava nas próprias patas e rodava no meio da rua feito uma barata tonta, sem saber se estava indo ou voltando. — Kika! Cadê a nós?! — perguntava ele, ofegante, quase batendo de frente numa lixeira.',
+  'Os dois fizeram a maior barulheira do bairro a tarde inteira: latiram pros passarinhos, perseguiram folhas ao vento, rolaram na grama e cheiraram cada poste umas quatro vezes. — Nunca mais vamos voltar! — combinaram, sentados no meio-fio, ofegantes e felizes. — Vamos ser livres pra sempre! — completou Kika, batendo o peito com a patinha.',
+  'Mas o sol foi baixando... a tarde virou fim de tarde... e o cheirinho gostoso de ração começou a flutuar pelo vento. As barrigas dos dois fizeram: glu... glu... glu...',
+  'Antonella e o pai passaram de carro bem naquele momento. Ela viu Pretinho perdido rua afora, olhando pro além, completamente no mundo da lua — e Kika no meio de uma briga, batendo em todo mundo com sua coragem minúscula. — Pai, olha! — gritou Antonella. Abriram a porta na mesma hora e puxaram Pretinho pra dentro. — Vem cá, seu desastrado!',
+  'Kika, com sua super velocidade de raio pequenino, viu a cena, acelerou como um foguete e ultrapassou o carro em segundos. Entrou pelas primeiras frestinhas do portão e chegou em casa primeiro — sentadinha no tapete, abanando o rabo devagarinho, com a carinha mais inocente do mundo. — Oi? Aconteceu alguma coisa?',
+  'Segundos depois o carro chegou. Pretinho desceu todo desengonçado, ainda com cara de quem estava olhando pro além, e também fingiu a maior inocência do planeta. Quando os potinhos de ração apareceram, os dois delinquentes foram direto: croc, croc, croc.',
+  {heading:'Fim', note:'Antonella olhou pra eles, balançou a cabeça e não conseguiu ficar brava — só riu baixinho.<br><br>De barriga cheia e coração leve, os dois aventureiros fecharam os olhinhos, e a noite ficou quietinha.<br><br>Agora fecha os olhinhos também... e sonha com aventuras bem engraçadas.<br>Boa noite. 🌙🐶🐶'}
 ];
 
+function bird(cx,cy,scale){ return `<path d="M${cx-8*scale} ${cy} Q${cx-4*scale} ${cy-6*scale} ${cx} ${cy} Q${cx+4*scale} ${cy-6*scale} ${cx+8*scale} ${cy}" stroke="#5B4636" stroke-width="${1.6*scale}" fill="none" stroke-linecap="round"/>`; }
+function leafSwirl(cx,cy,scale,color){ return `<g transform="translate(${cx},${cy}) scale(${scale})"><ellipse rx="7" ry="4" fill="${color||'#C9A876'}" transform="rotate(25)"/></g>`; }
+function rainbowArc(cx,cy,r){
+  const cols=['#FF6F91','#FFC857','#7BB37A','#6FE0C9','#8FCBEA'];
+  return cols.map((c,i)=>`<path d="M${cx-r+i*8} ${cy} A${r-i*8} ${r-i*8} 0 0 1 ${cx+r-i*8} ${cy}" stroke="${c}" stroke-width="7" fill="none" opacity="0.85"/>`).join('');
+}
+function tree2(cx,base,scale){
+  return `<g transform="translate(${cx},${base}) scale(${scale})">
+    <rect x="-5" y="-40" width="10" height="40" fill="#8A6A45"/>
+    <circle cx="0" cy="-58" r="26" fill="#8CBF7E"/><circle cx="-18" cy="-44" r="18" fill="#7BB37A"/><circle cx="18" cy="-44" r="18" fill="#7BB37A"/>
+  </g>`;
+}
+function motionLines(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})" stroke="#fff" stroke-width="3" opacity="0.55" stroke-linecap="round">
+    <path d="M-46 -6 L-70 -6"/><path d="M-42 6 L-64 8"/><path d="M-40 -18 L-60 -22"/></g>`;
+}
+
 const KIKA_ART = [
-  rectBg('#FFD98A','#FF9F5B')+sun(300,80,34)+cloud(90,70,0.9,'#fff')+grass('#F4E6D2',330)+houseBack()+fence(360)+kika(140,400,1.5,'sit')+pretinho(230,400,1.5,'sit')+pawTrail(60,470,26,-8,8),
-  rectBg('#FFE7BE','#FFD98A')+sun(320,60,26)+cloud(70,60,0.7,'#fff')+grass('#F4E6D2',300)+houseBack()+fence(330)+gate(150,330,false)+kika(120,380,1.2,'sit')+pretinho(240,385,1.2,'sit'),
-  rectBg('#FFE7BE','#FFD98A')+grass('#F4E6D2',260)+houseBack()+gate(210,330,true)+antonellaFig(120,300,1.3)+blanket(118,270,1.1)+pretinho(170,370,1.0,'sit')+kika(260,350,1.0,'sit'),
-  rectBg('#FFD98A','#FFC857')+grass('#F4E6D2',280)+fence(320)+kika(120,340,1.3,'run')+pretinho(250,350,1.2,'run')+pawTrail(60,420,24,-4,10),
-  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(60,300)+lamppost(330,300)+kika(190,270,1.6,'run')+[...Array(3)].map((_,i)=>`<g transform="translate(${70+i*90},250)" opacity="0.6">${pretinho(0,0,0.5,'sit')}</g>`).join(''),
-  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(310,300)+pretinho(180,290,1.5,'run'),
-  rectBg('#FFD98A','#FFC857')+grass('#DCEAC0',300)+curb(298)+kika(150,340,1.2,'sit')+pretinho(240,345,1.1,'sit'),
-  rectBg('#FF9F5B','#C85A32')+sun(320,70,24)+road(320)+kika(150,360,1.0,'sit')+pretinho(250,365,1.0,'sit'),
-  rectBg('#FF9F5B','#C85A32')+road(340)+car(230,260,1.0)+antonellaFig(120,240,1.0)+kika(210,330,0.9,'run')+pretinho(280,330,0.9,'sit'),
-  rectBg('#FFD98A','#FFE7BE')+houseBack()+fence(360)+kika(210,400,1.7,'sit')+pawTrail(60,420,28,-6,8),
+  rectBg('#FFD98A','#FF9F5B')+sun(300,80,34)+cloud(90,70,0.9,'#fff')+cloud(330,140,0.6,'#fff')+bird(200,60,1.4)+bird(220,50,1.1)+grass('#F4E6D2',330)+houseBack()+tree2(50,330,0.9)+tree2(350,330,0.8)+fence(360)+kika(140,400,1.5,'sit')+pretinho(230,400,1.5,'sit')+pawTrail(60,470,26,-8,8),
+  rectBg('#FFE7BE','#FFD98A')+sun(320,60,26)+cloud(70,60,0.7,'#fff')+bird(260,90,1)+grass('#F4E6D2',300)+houseBack()+tree2(340,300,0.7)+fence(330)+gate(150,330,false)+kika(120,380,1.2,'sit')+pretinho(240,385,1.2,'sit'),
+  rectBg('#FFE7BE','#FFD98A')+grass('#F4E6D2',260)+houseBack()+gate(210,330,true)+antonellaFig(120,300,1.3)+blanket(118,270,1.1)+pretinho(170,370,1.0,'sit')+kika(260,350,1.0,'sit')+leafSwirl(90,250,1.2)+leafSwirl(300,230,1,'#7BB37A'),
+  rectBg('#FFD98A','#FFC857')+grass('#F4E6D2',280)+tree2(330,280,0.8)+fence(320)+motionLines(120,320,1)+motionLines(250,330,1)+kika(120,340,1.3,'run')+pretinho(250,350,1.2,'run')+pawTrail(60,420,24,-4,10)+leafSwirl(200,150,1.3,'#FFC857')+leafSwirl(230,180,1,'#7BB37A'),
+  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(60,300)+lamppost(330,300)+bird(90,50,1)+bird(300,60,0.9)+kika(190,270,1.6,'run')+motionLines(140,280,1.3)+[...Array(3)].map((_,i)=>`<g transform="translate(${70+i*90},250)" opacity="0.6">${pretinho(0,0,0.5,'sit')}</g>`).join(''),
+  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(310,300)+cloud(300,60,0.6,'#fff')+pretinho(180,290,1.5,'run')+motionLines(120,300,1.4),
+  rectBg('#FFD98A','#FFC857')+grass('#DCEAC0',300)+curb(298)+tree2(340,300,0.7)+leafSwirl(80,200,1.4,'#FF8A5B')+leafSwirl(300,180,1.2,'#7BB37A')+leafSwirl(200,150,1,'#FFC857')+kika(150,340,1.2,'sit')+pretinho(240,345,1.1,'sit'),
+  rectBg('#FF9F5B','#C85A32')+sun(320,70,24)+cloud(80,80,0.6,'#FFE0C7')+road(320)+kika(150,360,1.0,'sit')+pretinho(250,365,1.0,'sit'),
+  rectBg('#FF9F5B','#C85A32')+road(340)+car(230,260,1.0)+antonellaFig(120,230,1.0)+kika(210,330,0.9,'run')+pretinho(280,330,0.9,'sit')+motionLines(150,330,1),
+  rectBg('#FFD98A','#FFE7BE')+rainbowArc(190,470,120)+houseBack()+fence(360)+kika(210,400,1.7,'sit')+pawTrail(60,420,28,-6,8)+motionLines(280,380,1.2),
   rectBg('#FFD98A','#FFE7BE')+houseBack()+fence(360)+bowls(190,430)+pretinho(200,380,1.5,'sit')+kika(120,400,1.1,'sit'),
   rectBg('#241F4A','#161331')+starsField(20,380,280)+moonScene(190,80,34)+kika(150,220,0.9,'sit')+pretinho(230,225,0.9,'sit')
 ];
