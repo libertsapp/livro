@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>Histórias Verdadeiras e Muito Aumentadas de Antonella</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6E8;
+    --sun:#FFC857;
+    --coral:#FF8A5B;
+    --coral-dark:#C85A32;
+    --night:#241F4A;
+    --night-2:#161331;
+    --violet:#4A3F8C;
+    --plum:#3B2F45;
+    --paper:#FFFDF7;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html,body{
+    height:100%; margin:0; overflow:hidden;
+    font-family:'Quicksand', sans-serif;
+    background:#000;
+  }
+
+  #app{
+    position:fixed; inset:0;
+    background:#000;
+    touch-action: pan-y;
+  }
+
+  .book{ position:absolute; inset:0; perspective: 2200px; }
+
+  .page{
+    position:absolute; inset:0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform .7s cubic-bezier(.45,.05,.15,1);
+    background:#000;
+  }
+  .page::after{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(to right, rgba(0,0,0,.28), transparent 42%);
+    opacity:0; transition:opacity .7s; pointer-events:none; z-index:6;
+  }
+  .page.flipped::after{ opacity:.65; }
+  .page::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:16px;
+    background: linear-gradient(to right, rgba(0,0,0,.35), rgba(0,0,0,0));
+    z-index:6; pointer-events:none;
+  }
+
+  .page-face{ position:absolute; inset:0; backface-visibility:hidden; overflow:hidden; }
+
+  .bg-fallback{ position:absolute; inset:0; z-index:1; }
+  .bg-fallback svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .bg-photo{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit: cover; z-index:2; display:block;
+  }
+
+  .overlay{
+    position:absolute; inset:0; z-index:3;
+    display:flex; flex-direction:column;
+    padding: max(26px, env(safe-area-inset-top)) 24px max(26px, env(safe-area-inset-bottom));
+    pointer-events:none;
+  }
+  .overlay *{ pointer-events:auto; }
+
+  /* ---- cover ---- */
+  .cover-overlay{ justify-content:flex-end; align-items:center; text-align:center; }
+  .cover-overlay .tap-hint{
+    font-family:'Quicksand'; font-weight:600; font-size:12.5px;
+    color:#fff; background:rgba(0,0,0,.35); padding:8px 16px; border-radius:20px;
+    letter-spacing:.02em; margin-bottom: 6px;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:.6;} 50%{opacity:1;} }
+
+  /* ---- menu ---- */
+  .menu-face{ background: radial-gradient(ellipse 900px 700px at 50% -10%, #3A2F7A 0%, var(--night) 55%, var(--night-2) 100%); }
+  .menu-overlay{ justify-content:flex-start; align-items:center; overflow-y:auto; }
+  .menu-overlay h2{
+    font-family:'Baloo 2'; font-weight:800; color:var(--sun);
+    font-size: clamp(22px,6vw,30px); margin: 10px 0 2px; text-align:center;
+  }
+  .menu-overlay p.hint{
+    color:#C9C2E0; font-size:13.5px; margin:0 0 26px; text-align:center;
+  }
+  .card-grid{
+    width:100%; max-width:420px;
+    display:grid; grid-template-columns: 1fr 1fr; gap:14px;
+  }
+  .story-card{
+    position:relative;
+    border-radius:16px; overflow:hidden;
+    aspect-ratio: 3/4;
+    background: linear-gradient(160deg,#FF8A5B,#C85A32);
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+    padding: 10px 8px 12px; text-align:center;
+    text-decoration:none; color:#fff;
+    box-shadow: 0 10px 22px -10px rgba(0,0,0,.5);
+    transition: transform .15s;
+  }
+  .story-card:active{ transform: scale(.96); }
+  .story-card .icon{ font-size:30px; margin-bottom:auto; margin-top:16px; }
+  .story-card p{ font-family:'Baloo 2'; font-weight:700; font-size:13px; margin:0; line-height:1.2; }
+  .story-card span{ font-size:10px; font-weight:600; margin-top:4px; opacity:.9; }
+  .story-card.locked{
+    background: linear-gradient(160deg,#4A4380,#322A63);
+    opacity:.7;
+  }
+
+  /* ---- story pages (kika) ---- */
+  .kika-text{
+    margin-top:auto;
+    background: rgba(255,253,247,.96);
+    border-radius:16px;
+    padding: 16px 18px;
+    max-width: 440px;
+    align-self:center;
+    box-shadow: 0 -6px 20px rgba(0,0,0,.15);
+  }
+  .kika-text p{ margin:0; font-size:14px; line-height:1.55; color:var(--plum); }
+  .kika-page-num{
+    position:absolute; bottom: max(10px, env(safe-area-inset-bottom)); right:16px;
+    font-size:10.5px; color:rgba(255,255,255,.85); z-index:4;
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+  }
+  .kika-cover-overlay{ justify-content:flex-start; align-items:center; text-align:center; }
+  .kika-cover-overlay .kicker{ font-size:11.5px; font-weight:700; color:var(--sun); letter-spacing:.03em; text-shadow:0 1px 3px rgba(0,0,0,.6); margin:0 0 6px; }
+  .kika-cover-overlay h2{ font-family:'Baloo 2'; font-weight:800; font-size:26px; color:#fff; margin:0; text-shadow:0 2px 8px rgba(0,0,0,.55); }
+  .kika-cover-overlay .byline{ font-size:12.5px; color:#FFE9C7; margin-top:6px; text-shadow:0 1px 3px rgba(0,0,0,.6); }
+
+  /* ---- top controls ---- */
+  .top-controls{
+    position:fixed; top: max(14px, env(safe-area-inset-top)); right:14px; z-index:20;
+    display:flex; gap:8px;
+  }
+  .icon-btn{
+    width:38px; height:38px; border-radius:50%; border:none;
+    background: rgba(0,0,0,.4); color:#fff; font-size:16px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .home-btn{
+    position:fixed; top: max(14px, env(safe-area-inset-top)); left:14px; z-index:20;
+    width:38px; height:38px; border-radius:50%; border:none;
+    background: rgba(0,0,0,.4); color:#fff; font-size:15px;
+    display:none; align-items:center; justify-content:center; cursor:pointer;
+  }
+
+  .progress-dots{
+    position:fixed; bottom: max(10px, env(safe-area-inset-bottom)); left:0; right:0;
+    z-index:20; display:flex; justify-content:center; gap:5px; pointer-events:none;
+  }
+  .progress-dots span{
+    width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.35);
+  }
+  .progress-dots span.active{ background:#fff; width:16px; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="book" id="book"></div>
+</div>
+
+<button class="home-btn" id="homeBtn" title="Voltar ao menu">&#8962;</button>
+<div class="top-controls">
+  <button class="icon-btn" id="fsBtn" title="Tela cheia">&#10021;</button>
+</div>
+<div class="progress-dots" id="dots"></div>
+
+<script>
+/* ============ SVG helper art (fallback enquanto as imagens reais nao estao hospedadas) ============ */
+function skyBg(top,bottom){
+  const id='g'+Math.random().toString(36).slice(2);
+  return {defs:`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bottom}"/></linearGradient>`, fill:`url(#${id})`};
+}
+function rectBg(top,bottom){ const g=skyBg(top,bottom); return `<defs>${g.defs}</defs><rect width="100%" height="100%" fill="${g.fill}"/>`; }
+function sun(cx,cy,r){ return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFD166"/><circle cx="${cx}" cy="${cy}" r="${r+10}" fill="#FFD166" opacity="0.25"/>`; }
+function moonScene(cx,cy,r){ return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#FFF3D0"/>`; }
+function cloud(cx,cy,scale,fill){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})" fill="${fill}" opacity="0.95"><ellipse cx="0" cy="0" rx="30" ry="14"/><ellipse cx="-20" cy="5" rx="18" ry="11"/><ellipse cx="20" cy="5" rx="19" ry="12"/></g>`;
+}
+function grass(color,y){ return `<rect x="0" y="${y}" width="380" height="500" fill="${color}"/>`; }
+function houseBack(){
+  return `<rect x="0" y="140" width="380" height="360" fill="#F4E6D2"/><rect x="30" y="180" width="320" height="220" fill="#E9D3B0"/>
+  <rect x="60" y="220" width="70" height="90" fill="#B9C9C3" rx="4"/><rect x="250" y="220" width="70" height="90" fill="#B9C9C3" rx="4"/>`;
+}
+function fence(y){
+  let bars=''; for(let x=0;x<380;x+=26){ bars+=`<rect x="${x}" y="${y-38}" width="8" height="42" fill="#C9A876"/>`; }
+  return bars + `<rect x="0" y="${y}" width="380" height="8" fill="#A8814F"/>`;
+}
+function road(y){
+  return `<rect x="0" y="${y}" width="380" height="500" fill="#B7ADAE"/>${[...Array(6)].map((_,i)=>`<rect x="${-20+i*70}" y="${y+40}" width="40" height="8" fill="#EDE7DD"/>`).join('')}`;
+}
+function curb(y){ return `<rect x="0" y="${y}" width="380" height="14" fill="#D8D2C4"/>`; }
+function lamppost(x,y){ return `<rect x="${x-3}" y="${y-90}" width="6" height="90" fill="#5B4636"/><circle cx="${x}" cy="${y-96}" r="10" fill="#FFE9A8"/>`; }
+function car(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <rect x="-70" y="-10" width="140" height="34" rx="10" fill="#D8362A"/>
+    <path d="M-42 -10 Q-30 -34 10 -34 Q42 -34 46 -10 Z" fill="#E85B4E"/>
+    <rect x="-24" y="-28" width="26" height="16" fill="#DDEBF7" rx="2"/><rect x="6" y="-28" width="26" height="16" fill="#DDEBF7" rx="2"/>
+    <circle cx="-42" cy="26" r="14" fill="#241F3D"/><circle cx="42" cy="26" r="14" fill="#241F3D"/>
+    <circle cx="-42" cy="26" r="5" fill="#B9C0D8"/><circle cx="42" cy="26" r="5" fill="#B9C0D8"/>
+  </g>`;
+}
+function bowls(cx,cy){
+  return `<g transform="translate(${cx},${cy})"><ellipse cx="-30" cy="0" rx="26" ry="9" fill="#C85A32"/><ellipse cx="-30" cy="-4" rx="22" ry="7" fill="#FFD9A0"/>
+  <ellipse cx="30" cy="0" rx="26" ry="9" fill="#5B6EE1"/><ellipse cx="30" cy="-4" rx="22" ry="7" fill="#FFD9A0"/></g>`;
+}
+function blanket(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})"><path d="M-40 -30 Q0 -50 40 -30 Q56 0 40 32 Q0 52 -40 32 Q-56 0 -40 -30Z" fill="#EADFC4"/>
+  <path d="M-40 -30 Q0 -50 40 -30" fill="none" stroke="#D8C8A0" stroke-width="3"/></g>`;
+}
+function kika(cx,cy,scale,pose){
+  pose = pose || 'sit';
+  let legs = pose==='run'
+    ? `<path d="M-14 20 L-22 34" stroke="#EDEDED" stroke-width="8" stroke-linecap="round"/><path d="M12 20 L20 6" stroke="#EDEDED" stroke-width="8" stroke-linecap="round"/>`
+    : `<rect x="-16" y="16" width="8" height="16" rx="3" fill="#EDEDED"/><rect x="8" y="16" width="8" height="16" rx="3" fill="#EDEDED"/>`;
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="34" rx="20" ry="4" fill="rgba(0,0,0,.12)"/>${legs}
+    <ellipse cx="0" cy="10" rx="22" ry="16" fill="#FFFFFF"/><ellipse cx="-3" cy="15" rx="10" ry="8.5" fill="#26222C"/>
+    <path d="M-20 4 Q-34 -6 -30 -18 Q-18 -14 -14 -2Z" fill="#FFFFFF"/><circle cx="14" cy="-6" r="15" fill="#FFFFFF"/>
+    <path d="M6 -18 Q2 -30 10 -30 Q16 -22 12 -12Z" fill="#EDEDED"/><path d="M22 -18 Q28 -28 20 -30 Q14 -24 16 -12Z" fill="#EDEDED"/>
+    <circle cx="9" cy="-6" r="1.8" fill="#3B2F45"/><circle cx="19" cy="-8" r="1.8" fill="#3B2F45"/>
+    <ellipse cx="15" cy="0" rx="2.6" ry="2" fill="#3B2F45"/><path d="M15 2 Q15 6 19 6" stroke="#3B2F45" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+function pretinho(cx,cy,scale,pose){
+  pose = pose || 'sit';
+  let legs = pose==='run'
+    ? `<path d="M-20 34 L-32 52" stroke="#1C1A22" stroke-width="12" stroke-linecap="round"/><path d="M18 34 L30 12" stroke="#1C1A22" stroke-width="12" stroke-linecap="round"/>`
+    : `<rect x="-24" y="30" width="12" height="24" rx="4" fill="#1C1A22"/><rect x="12" y="30" width="12" height="24" rx="4" fill="#1C1A22"/>`;
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="56" rx="30" ry="6" fill="rgba(0,0,0,.14)"/>${legs}
+    <ellipse cx="0" cy="16" rx="32" ry="24" fill="#26222C"/><path d="M-26 4 Q-46 -6 -40 -22 Q-24 -18 -18 -2Z" fill="#26222C"/>
+    <circle cx="20" cy="-10" r="22" fill="#26222C"/><path d="M6 -26 Q-2 -42 10 -44 Q22 -34 16 -18Z" fill="#1C1A22"/>
+    <path d="M34 -26 Q44 -40 34 -44 Q22 -36 24 -18Z" fill="#1C1A22"/>
+    <circle cx="13" cy="-10" r="2.4" fill="#fff"/><circle cx="27" cy="-12" r="2.4" fill="#fff"/>
+    <circle cx="13" cy="-9" r="1.2" fill="#1C1A22"/><circle cx="27" cy="-11" r="1.2" fill="#1C1A22"/>
+    <ellipse cx="22" cy="0" rx="3.4" ry="2.6" fill="#3B2F45"/><path d="M22 2 Q22 8 30 10 Q26 14 20 12" fill="#FF9E85"/>
+  </g>`;
+}
+function antonellaFig(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="60" rx="18" ry="4" fill="rgba(0,0,0,.12)"/>
+    <path d="M-14 58 L-16 24 Q0 14 16 24 L14 58 Z" fill="#5B6EE1"/>
+    <circle cx="0" cy="6" r="16" fill="#E6AE83"/>
+    <path d="M-17 -2 Q0 -26 17 -2 Q17 8 10 6 Q8 -8 0 -8 Q-8 -8 -10 6 Q-17 8 -17 -2Z" fill="#2B2118"/>
+  </g>`;
+}
+function gate(x,y,open){
+  return `<g><rect x="${x-6}" y="${y-90}" width="10" height="94" fill="#8A6A45"/><rect x="${x+70}" y="${y-90}" width="10" height="94" fill="#8A6A45"/>
+  <g transform="rotate(${open?-38:0} ${x} ${y-4})"><rect x="${x}" y="${y-84}" width="66" height="80" fill="#C9A876" opacity="0.95"/>
+  ${[...Array(4)].map((_,i)=>`<rect x="${x+8+i*15}" y="${y-84}" width="6" height="80" fill="#B08D5C"/>`).join('')}</g></g>`;
+}
+function pawIcon(cx,cy,scale,color){
+  color = color || '#C85A32';
+  return `<g transform="translate(${cx},${cy}) scale(${scale})" fill="${color}" opacity="0.9">
+  <ellipse cx="0" cy="6" rx="9" ry="7"/><ellipse cx="-9" cy="-6" rx="4" ry="5"/><ellipse cx="9" cy="-6" rx="4" ry="5"/>
+  <ellipse cx="-4" cy="-11" rx="3.4" ry="4.4"/><ellipse cx="4" cy="-11" rx="3.4" ry="4.4"/></g>`;
+}
+function pawTrail(x,y,dx,dy,count){
+  let out=''; for(let i=0;i<count;i++){ out+=pawIcon(x+dx*i,y+dy*i,0.7, i%2===0?'#FF8A5B':'#C85A32'); } return out;
+}
+function starsField(n,w,h){
+  let out=''; for(let i=0;i<n;i++){ out+=`<circle cx="${(Math.random()*w).toFixed(1)}" cy="${(Math.random()*h).toFixed(1)}" r="${(1+Math.random()*1.5).toFixed(1)}" fill="#fff" opacity="${(0.3+Math.random()*0.5).toFixed(2)}"/>`; }
+  return out;
+}
+function fantasyCoverFallback(){
+  return `<defs><linearGradient id="fcv" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3B2E7A"/><stop offset="0.55" stop-color="#241F4A"/><stop offset="1" stop-color="#161331"/></linearGradient></defs>
+  <rect width="380" height="560" fill="url(#fcv)"/>${starsField(30,380,560)}
+  <path d="M250 60 Q246 76 262 80 Q246 84 250 100 Q238 85 224 90 Q238 80 232 64 Q244 72 250 60Z" fill="#FFEFC2" opacity="0.9"/>`;
+}
+
+/* ============ Page definitions ============ */
+const KIKA_TEXTS = [
+  {kicker:'uma aventura (quase) verdadeira', heading:'A Fuga de Kika<br>e Pretinho', byline:'contada por Antonella'},
+  'Era uma tarde ensolarada e preguiçosa, dessas que o bairro inteiro parece estar cochilando. Mas dentro de casa, Kika e Pretinho já planejavam a maior aventura do dia. — Shiu... o portão está entreaberto — sussurrou Kika.',
+  'Antonella estava distraída perto da garagem. Pretinho puxou um cobertor velho com o focinho e, num empurrão desastrado, jogou tudo em cima da cabeça dela! — Iiiihhh! — gritou ela. Enquanto isso, Kika terminou de abrir o portão.',
+  '— Agora! — rosnou Kika baixinho. E os dois saíram disparados, rindo aquela risadinha de cachorro feliz, fazendo as caretas mais engraçadas do mundo.',
+  'Pela rua afora a bagunça começou de verdade. Kika, do tamanho de um chinelo, virou uma guerreira: enfrentava cada cachorro que aparecia, e todos saíam de fininho, abanando o rabo, confusos.',
+  'Já Pretinho... esbarrava nos postes, tropeçava nas próprias patas e rodava no meio da rua feito uma barata tonta. — Kika! Cadê a gente?! — perguntava ele, ofegante, quase batendo numa lixeira.',
+  'Os dois latiram pros passarinhos, perseguiram folhas ao vento, rolaram na grama e cheiraram cada poste umas quatro vezes. — Nunca mais vamos voltar! — combinaram, sentados no meio-fio. — Vamos ser livres pra sempre! — completou Kika.',
+  'Mas o sol foi baixando, e o cheirinho de ração começou a flutuar no vento. As barrigas dos dois fizeram: glu... glu... glu...',
+  '— Pai, olha! — gritou Antonella, vendo Kika brigando com coragem minúscula, e Pretinho parado no meio da bagunça, no mundo da lua. Abriram a porta do carro e puxaram Pretinho pra dentro. — Vem cá, seu desastrado!',
+  'Kika, veloz como um raio pequenino, ultrapassou o carro e chegou em casa primeiro. Quando a porta abriu, lá estava ela, sentadinha, com a carinha mais inocente do mundo. — Oi? Aconteceu alguma coisa?',
+  'Segundos depois, Pretinho desceu todo desengonçado, também fingindo a maior inocência do planeta. Quando os potinhos de ração apareceram, os dois foram direto: croc, croc, croc.',
+  {heading:'Fim', note:'Antonella balançou a cabeça e não conseguiu ficar brava — só riu baixinho.<br><br>Agora fecha os olhinhos também... e sonha com aventuras bem engraçadas.<br>Boa noite. 🌙🐶🐶'}
+];
+
+const KIKA_ART = [
+  rectBg('#FFD98A','#FF9F5B')+sun(300,80,34)+cloud(90,70,0.9,'#fff')+grass('#F4E6D2',330)+houseBack()+fence(360)+kika(140,400,1.5,'sit')+pretinho(230,400,1.5,'sit')+pawTrail(60,470,26,-8,8),
+  rectBg('#FFE7BE','#FFD98A')+sun(320,60,26)+cloud(70,60,0.7,'#fff')+grass('#F4E6D2',300)+houseBack()+fence(330)+gate(150,330,false)+kika(120,380,1.2,'sit')+pretinho(240,385,1.2,'sit'),
+  rectBg('#FFE7BE','#FFD98A')+grass('#F4E6D2',260)+houseBack()+gate(210,330,true)+antonellaFig(120,300,1.3)+blanket(118,270,1.1)+pretinho(170,370,1.0,'sit')+kika(260,350,1.0,'sit'),
+  rectBg('#FFD98A','#FFC857')+grass('#F4E6D2',280)+fence(320)+kika(120,340,1.3,'run')+pretinho(250,350,1.2,'run')+pawTrail(60,420,24,-4,10),
+  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(60,300)+lamppost(330,300)+kika(190,270,1.6,'run')+[...Array(3)].map((_,i)=>`<g transform="translate(${70+i*90},250)" opacity="0.6">${pretinho(0,0,0.5,'sit')}</g>`).join(''),
+  rectBg('#FFE0A8','#FFC857')+road(300)+curb(300)+lamppost(310,300)+pretinho(180,290,1.5,'run'),
+  rectBg('#FFD98A','#FFC857')+grass('#DCEAC0',300)+curb(298)+kika(150,340,1.2,'sit')+pretinho(240,345,1.1,'sit'),
+  rectBg('#FF9F5B','#C85A32')+sun(320,70,24)+road(320)+kika(150,360,1.0,'sit')+pretinho(250,365,1.0,'sit'),
+  rectBg('#FF9F5B','#C85A32')+road(340)+car(230,260,1.0)+antonellaFig(120,240,1.0)+kika(210,330,0.9,'run')+pretinho(280,330,0.9,'sit'),
+  rectBg('#FFD98A','#FFE7BE')+houseBack()+fence(360)+kika(210,400,1.7,'sit')+pawTrail(60,420,28,-6,8),
+  rectBg('#FFD98A','#FFE7BE')+houseBack()+fence(360)+bowls(190,430)+pretinho(200,380,1.5,'sit')+kika(120,400,1.1,'sit'),
+  rectBg('#241F4A','#161331')+starsField(20,380,280)+moonScene(190,80,34)+kika(150,220,0.9,'sit')+pretinho(230,225,0.9,'sit')
+];
+
+function buildPage(kind, opts){
+  const el = document.createElement('div');
+  el.className='page';
+  const face = document.createElement('div');
+  face.className='page-face' + (opts.faceClass ? ' '+opts.faceClass : '');
+
+  if(opts.svg){
+    const fb = document.createElement('div');
+    fb.className='bg-fallback';
+    fb.innerHTML = `<svg viewBox="0 0 380 560" preserveAspectRatio="xMidYMid slice">${opts.svg}</svg>`;
+    face.appendChild(fb);
+  }
+  if(opts.img){
+    const img = document.createElement('img');
+    img.className='bg-photo';
+    img.src = opts.img;
+    img.alt='';
+    img.onerror = function(){ this.style.display='none'; };
+    face.appendChild(img);
+  }
+  if(opts.overlayHTML){
+    const ov = document.createElement('div');
+    ov.className='overlay ' + (opts.overlayClass||'');
+    ov.innerHTML = opts.overlayHTML;
+    face.appendChild(ov);
+    if(opts.afterAppend) opts.afterAppend(ov);
+  }
+  if(opts.pageNum !== undefined){
+    const num = document.createElement('span');
+    num.className='kika-page-num';
+    num.textContent = opts.pageNum;
+    face.appendChild(num);
+  }
+  el.appendChild(face);
+  return el;
+}
+
+const pages = [];
+
+/* 0: capa principal */
+pages.push({el: buildPage('cover', {
+  svg: fantasyCoverFallback(),
+  img: 'assets/capa.jpg',
+  overlayClass:'cover-overlay',
+  overlayHTML: `<span class="tap-hint">deslize para começar ➜</span>`
+})});
+
+/* 1: menu */
+pages.push({el: buildPage('menu', {
+  faceClass:'menu-face',
+  overlayClass:'menu-overlay',
+  overlayHTML: `
+    <h2>Escolha a estorinha</h2>
+    <p class="hint">deslize ou toque num livro pra abrir</p>
+    <div class="card-grid" id="cardGrid"></div>
+  `,
+  afterAppend: (ov)=>{
+    const grid = ov.querySelector('#cardGrid');
+    const items = [
+      {icon:'🐾', title:'A Fuga de Kika e Pretinho', meta:'12 páginas', jump: 2},
+      {icon:'🌙', title:'A Lua Sumida', meta:'🔒 em breve', jump:null},
+      {icon:'🦖', title:'O Dinossauro do Quintal', meta:'🔒 em breve', jump:null},
+      {icon:'🎈', title:'A Vez que Eu Voei', meta:'🔒 em breve', jump:null},
+    ];
+    items.forEach(it=>{
+      const card = document.createElement(it.jump!==null ? 'a' : 'div');
+      card.className='story-card' + (it.jump===null ? ' locked':'');
+      card.innerHTML = `<span class="icon">${it.icon}</span><p>${it.title}</p><span>${it.meta}</span>`;
+      if(it.jump!==null){
+        card.href='javascript:void(0)';
+        card.addEventListener('click', ()=> jumpTo(it.jump));
+      }
+      grid.appendChild(card);
+    });
+  }
+})});
+
+/* 2..13: historia da Kika e do Pretinho */
+KIKA_TEXTS.forEach((t,i)=>{
+  const num = i; // 0 = capa, 11 = contracapa
+  const imgPath = num===0 ? 'assets/kika-e-pretinho/capa.jpg'
+                : num===KIKA_TEXTS.length-1 ? 'assets/kika-e-pretinho/fim.jpg'
+                : `assets/kika-e-pretinho/${String(num).padStart(2,'0')}.jpg`;
+
+  if(num===0){
+    pages.push({el: buildPage('kika-cover', {
+      svg: KIKA_ART[num], img: imgPath, overlayClass:'kika-cover-overlay',
+      overlayHTML: `<p class="kicker">${t.kicker}</p><h2>${t.heading}</h2><p class="byline">${t.byline}</p>`
+    })});
+  } else if(num===KIKA_TEXTS.length-1){
+    pages.push({el: buildPage('kika-back', {
+      svg: KIKA_ART[num], img: imgPath, overlayClass:'kika-cover-overlay',
+      overlayHTML: `<h2 style="margin-top:30%">${t.heading}</h2><p class="byline" style="max-width:280px">${t.note}</p>`
+    })});
+  } else {
+    pages.push({el: buildPage('kika-page', {
+      svg: KIKA_ART[num], img: imgPath,
+      overlayHTML: `<div class="kika-text"><p>${t}</p></div>`,
+      pageNum: `pág. ${num} de 10`
+    })});
+  }
+});
+
+/* ============ mount + engine ============ */
+const book = document.getElementById('book');
+pages.forEach((p,i)=>{ p.el.style.zIndex = pages.length - i; book.appendChild(p.el); });
+const pageEls = pages.map(p=>p.el);
+
+const dotsWrap = document.getElementById('dots');
+pageEls.forEach(()=>{ const d=document.createElement('span'); dotsWrap.appendChild(d); });
+const dotEls = Array.from(dotsWrap.children);
+
+let current = 0;
+const KIKA_START = 2;
+const homeBtn = document.getElementById('homeBtn');
+
+function render(){
+  pageEls.forEach((el,i)=>{
+    if(i<current){ el.style.transform='rotateY(-180deg)'; el.classList.add('flipped'); }
+    else{ el.style.transform='rotateY(0deg)'; el.classList.remove('flipped'); }
+  });
+  dotEls.forEach((d,i)=> d.classList.toggle('active', i===current));
+  homeBtn.style.display = current>=KIKA_START ? 'flex' : 'none';
+}
+function next(){ if(current<pageEls.length-1){ current++; render(); } }
+function prev(){ if(current>0){ current--; render(); } }
+function jumpTo(i){ current = Math.max(0, Math.min(pageEls.length-1, i)); render(); }
+
+render();
+
+homeBtn.addEventListener('click', ()=> jumpTo(1));
+
+/* ---- swipe (touch) ---- */
+const app = document.getElementById('app');
+let touchStartX=null, touchStartY=null;
+app.addEventListener('touchstart', e=>{
+  touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
+}, {passive:true});
+app.addEventListener('touchend', e=>{
+  if(touchStartX===null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)*1.4){
+    if(dx < 0) next(); else prev(); // dedo da direita p/ esquerda = proxima
+  }
+  touchStartX=null; touchStartY=null;
+}, {passive:true});
+
+/* ---- swipe (mouse, para testar no desktop) ---- */
+let mouseStartX=null;
+app.addEventListener('mousedown', e=>{ mouseStartX = e.clientX; });
+app.addEventListener('mouseup', e=>{
+  if(mouseStartX===null) return;
+  const dx = e.clientX - mouseStartX;
+  if(Math.abs(dx) > 60){ if(dx<0) next(); else prev(); }
+  mouseStartX=null;
+});
+
+/* ---- teclado ---- */
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') next();
+  if(e.key==='ArrowLeft') prev();
+});
+
+/* ---- fullscreen ---- */
+const fsBtn = document.getElementById('fsBtn');
+fsBtn.addEventListener('click', ()=>{
+  if(!document.fullscreenElement){
+    (app.requestFullscreen || app.webkitRequestFullscreen || function(){}).call(app);
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+  }
+});
+</script>
+</body>
+</html>
