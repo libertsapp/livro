@@ -42,6 +42,16 @@
   }
 
   .book{ position:absolute; inset:0; perspective: 2200px; }
+  .update-toast{
+    position:fixed; left:16px; right:16px; bottom: max(60px, calc(env(safe-area-inset-bottom) + 50px));
+    z-index:30; display:none; align-items:center; justify-content:space-between; gap:10px;
+    background: rgba(20,15,20,.94); color:#fff; padding:12px 14px; border-radius:14px;
+    font-family:'Quicksand',sans-serif; font-size:12.5px; box-shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+  .update-toast button{
+    background: #FF8A5B; border:none; color:#fff; font-weight:700;
+    padding:8px 14px; border-radius:20px; font-size:12px; cursor:pointer; white-space:nowrap;
+  }
 
   .page{
     position:absolute; inset:0;
@@ -221,7 +231,11 @@
 <button class="desktop-nav-btn next" id="nextDesktopBtn" title="Próxima página" aria-label="Próxima página">&#10095;</button>
 
 <div class="progress-dots" id="dots"></div>
-<div class="app-credit">By: Heleno Vilela &middot; Ver: 1.1</div>
+<div class="app-credit">By: Heleno Vilela &middot; Ver: 1.2.1</div>
+<div class="update-toast" id="updateToast">
+  <span>Nova versão disponível ✨</span>
+  <button id="updateBtn">Atualizar</button>
+</div>
 
 <script>
 /* ============ SVG helper art (fallback enquanto as imagens reais nao estao hospedadas) ============ */
@@ -694,12 +708,39 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowLeft') prev();
 });
 
-/* ---- PWA: registrar service worker ---- */
+/* ---- PWA: registrar service worker + detectar atualizações ---- */
 if('serviceWorker' in navigator){
   window.addEventListener('load', ()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+    navigator.serviceWorker.register('sw.js').then((reg)=>{
+      reg.addEventListener('updatefound', ()=>{
+        const newWorker = reg.installing;
+        if(!newWorker) return;
+        newWorker.addEventListener('statechange', ()=>{
+          if(newWorker.state==='installed' && navigator.serviceWorker.controller){
+            document.getElementById('updateToast').style.display='flex';
+          }
+        });
+      });
+      // checa se ja existe atualizacao esperando (ex: acabou de reabrir o app)
+      if(reg.waiting && navigator.serviceWorker.controller){
+        document.getElementById('updateToast').style.display='flex';
+      }
+    }).catch(()=>{});
+
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+      if(refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
   });
 }
+document.getElementById('updateBtn').addEventListener('click', ()=>{
+  navigator.serviceWorker.getRegistration().then((reg)=>{
+    if(reg && reg.waiting){ reg.waiting.postMessage('skipWaiting'); }
+    else { window.location.reload(); }
+  });
+});
 
 /* ---- PWA: botao de instalar (Android/Chrome/Edge) ---- */
 let deferredPrompt = null;

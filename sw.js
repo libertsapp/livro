@@ -1,4 +1,4 @@
-const CACHE_NAME = 'antonella-estorinhas-v1';
+const CACHE_NAME = 'antonella-estorinhas-v2';
 
 const CORE_ASSETS = [
   './',
@@ -7,14 +7,17 @@ const CORE_ASSETS = [
   './assets/capa.jpg',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
-  './assets/kika-e-pretinho/capa.jpg'
+  './assets/kika-e-pretinho/capa.jpg',
+  './assets/lobito-e-chapeuzinho/capa.jpg'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_ASSETS).catch(() => {}))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) =>
+      // cacheia cada arquivo separadamente: se um faltar (ex: imagem que
+      // ainda nao foi subida), os outros nao deixam de ser guardados
+      Promise.allSettled(CORE_ASSETS.map((url) => cache.add(url)))
+    ).then(() => self.skipWaiting())
   );
 });
 
@@ -26,12 +29,30 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// cache-first para tudo que for do mesmo site (html, imagens, manifest);
-// deixa passar direto pedidos externos (ex: Google Fonts)
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') self.skipWaiting();
+});
+
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
+  const isPage = event.request.mode === 'navigate' || event.request.destination === 'document';
+
+  if (isPage) {
+    // pagina principal: tenta sempre buscar a versao mais nova primeiro;
+    // so usa o cache se estiver sem internet
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return response;
+      }).catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // imagens, manifest, icones etc: cache primeiro (mais rapido, raramente mudam)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
