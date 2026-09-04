@@ -8,7 +8,8 @@ const CORE_ASSETS = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/kika-e-pretinho/capa.jpg',
-  './assets/lobito-e-chapeuzinho/capa.jpg'
+  './assets/lobito-e-chapeuzinho/capa.jpg',
+  './assets/joao-e-o-pe-de-feijao/capa.jpg'
 ];
 
 self.addEventListener('install', (event) => {

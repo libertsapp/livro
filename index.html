@@ -231,7 +231,7 @@
 <button class="desktop-nav-btn next" id="nextDesktopBtn" title="Próxima página" aria-label="Próxima página">&#10095;</button>
 
 <div class="progress-dots" id="dots"></div>
-<div class="app-credit">By: Heleno Vilela &middot; Ver: 1.2.11</div>
+<div class="app-credit">By: Heleno Vilela &middot; Ver: 1.3</div>
 <div class="update-toast" id="updateToast">
   <span>Nova versão disponível ✨</span>
   <button id="updateBtn">Atualizar</button>
@@ -531,6 +531,155 @@ const LOBITO_ART = [
   rectBg('#241F4A','#161331')+starsField(20,380,300)+moonScene(300,80,30)+cottage(190,480,0.7)
 ];
 
+/* ============ João Mané e o Pé de Feijão ============ */
+const JOAO_TEXTS = [
+  {kicker:'baseado em fatos (bem) exagerados', heading:'João Mané e o<br>Pé de Feijão', byline:'uma lição em forma de sonho'},
+  'Nos dias de hoje, numa casinha simples na beira da cidade, morava João, um rapaz bonzinho, mas inocente igual a um recém-nascido — acreditava em TUDO que via na internet.',
+  'Sua mãe, Dona Marieta, vivia de cabelo em pé: — Filho, quantas vezes eu já falei: presta atenção nesses golpes de internet! — Relaxa, mãe, eu sou esperto! — respondia João, checando o celular pela centésima vez.',
+  'Um dia, vendo que sua mãe estava precisando de dinheiro, João quis se antecipar, pegou a vaquinha da família, Mimosa, e foi vendê-la na feira da cidade.',
+  'Lá, um homem estranho de terno brilhante e sorriso grande demais se aproximou: — Ei, jovem! Notei sua vaca... e tenho uma OPORTUNIDADE ÚNICA pra você! 🤑',
+  '— Estes aqui — disse ele, mostrando três feijõezinhos numa saquinha — são feijões mágicos digitais premium! Plantando, vira uma árvore de dinheiro em 24 horas, garantido!',
+  'João, todo empolgado (e sem desconfiar de NADA), trocou a vaca pelos três feijões na hora. — Nossa, que sorte a minha! — pensou, todo orgulhoso.',
+  'Quando chegou em casa, Dona Marieta quase deixou cair a xícara de café: — Filho... você trocou a Mimosa por TRÊS FEIJÕES?! De novo caindo em golpe, depois de tudo que eu já te avisei?!',
+  '(O que João não sabia — mas quem está lendo já pode desconfiar — é que aquele "golpista" tinha combinado tudinho com Dona Marieta, que já suspeitava da inocência do filho e queria dar uma lição... do jeito mais engraçado possível!)',
+  'Naquela noite, João foi dormir MUITO preocupado, pensando nos feijões, na vaca, na mãe brava... e pegou no sono com a cabeça cheia de pensamentos malucos.',
+  'E foi então que ele sonhou: os feijões cresceram durante a noite, viraram um pé de feijão gigante, atravessando o teto da casa e sumindo lá em cima, nas nuvens! 🌱☁️',
+  'No sonho, João subiu e subiu, e lá em cima encontrou um castelo enorme — e dentro dele, um gigante barulhento, de chinelo de dedo e regata, assistindo a um jogo de futebol e comendo pipoca do tamanho de uma casa.',
+  '— FEE-FI-FO-FUM! Cheiro de gente pequena por aqui! — berrou o gigante, derrubando a TV gigante sem querer. — Ah não, perdi o pênalti decisivo! QUEM OUSA ATRAPALHAR MEU JOGO?!',
+  'João, apavorado, saiu correndo entre galinhas que botavam ovos de ouro mas também mandavam Pix, e uma harpa mágica que só tocava jingle de jogo do tigrinho.',
+  'Ele desceu correndo pelo pé de feijão, com o gigante gritando lá de cima, tropeçou, rolou, e — PLOFT! — caiu direto da cama no chão do próprio quarto! Acordou suado, coração disparado.',
+  'Dona Marieta apareceu na porta, rindo: — Calma, filho, foi só um sonho! Mas a parte dos feijões foi de verdade — combinei tudo com o rapaz da feira, porque a Mimosa nunca saiu da nossa família. Foi um jeitinho carinhoso pra você aprender: nem tudo que parece bom demais é verdade, nem na vida real, nem na internet! João, ainda tremendo, riu sem graça e abraçou a mãe: — Tá bom, tá bom, mãe... vou pensar duas vezes antes de confiar em promessa fácil demais.',
+  {heading:'Fim', note:'Dona Marieta deu um beijo na testa dele e sussurrou: — Viu como, mesmo dormindo, seu coração já sabia separar o certo do errado? Isso é ficar esperto de verdade.<br><br>E João, com o coração levinho, fechou os olhinhos e dormiu tranquilo, sabendo que a gente aprende até enquanto sonha.<br>Boa noite. 🌱🐄💛'}
+];
+
+function joao(cx,cy,scale,pose){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="70" rx="20" ry="4" fill="rgba(0,0,0,.12)"/>
+    <rect x="-14" y="30" width="11" height="38" rx="3" fill="#3B4A8C"/><rect x="3" y="30" width="11" height="38" rx="3" fill="#3B4A8C"/>
+    <path d="M-18 30 L-20 -10 Q0 -20 20 -10 L18 30 Z" fill="#5B8CE1"/>
+    <circle cx="0" cy="-24" r="15" fill="#E6AE83"/>
+    <path d="M-15 -28 Q0 -46 15 -28 Q15 -18 8 -20 Q6 -32 0 -32 Q-6 -32 -8 -20 Q-15 -18 -15 -28Z" fill="#4A2E1E"/>
+    <circle cx="-5" cy="-23" r="1.7" fill="#3B2F45"/><circle cx="5" cy="-23" r="1.7" fill="#3B2F45"/>
+    <path d="M-5 -16 Q0 -13 5 -16" stroke="#3B2F45" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+function phoneGlow(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <circle r="16" fill="#FFE9A8" opacity="0.35"/>
+    <rect x="-7" y="-11" width="14" height="22" rx="2.4" fill="#2B2B33"/>
+    <rect x="-5.5" y="-9" width="11" height="18" rx="1" fill="#8FCBEA"/>
+  </g>`;
+}
+function marieta(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="52" rx="20" ry="4" fill="rgba(0,0,0,.12)"/>
+    <path d="M-20 50 Q-22 0 0 -6 Q22 0 20 50 Z" fill="#E0483B"/>
+    <path d="M-14 20 Q-26 10 -22 -4" stroke="#C23B2E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M14 20 Q26 10 22 -4" stroke="#C23B2E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="0" cy="-18" r="15" fill="#E6AE83"/>
+    <path d="M-15 -20 Q-20 -46 0 -48 Q20 -46 15 -20 Q16 -30 8 -34 Q4 -40 -2 -30 Q-10 -34 -15 -20Z" fill="#4A2E1E"/>
+    <path d="M-16 -18 l-4 -6 M-13 -22 l-3 -7 M13 -22 l3 -7 M16 -18 l4 -6" stroke="#4A2E1E" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="-6" cy="-17" r="1.7" fill="#3B2F45"/><circle cx="6" cy="-17" r="1.7" fill="#3B2F45"/>
+    <path d="M-5 -8 Q0 -11 5 -8" stroke="#3B2F45" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+function golpista(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="60" rx="20" ry="4" fill="rgba(0,0,0,.12)"/>
+    <rect x="-16" y="10" width="32" height="48" rx="6" fill="#E8C34A"/>
+    <path d="M-16 10 L0 26 L16 10" fill="#fff"/>
+    <path d="M-4 10 L0 26 L4 10 Z" fill="#C23B2E"/>
+    <circle cx="0" cy="-14" r="15" fill="#E6AE83"/>
+    <path d="M-14 -20 Q0 -32 14 -20 Q14 -26 0 -28 Q-14 -26 -14 -20Z" fill="#241C1A"/>
+    <circle cx="-5" cy="-13" r="1.7" fill="#3B2F45"/><circle cx="5" cy="-13" r="1.7" fill="#3B2F45"/>
+    <path d="M-8 -5 Q0 3 8 -5" stroke="#3B2F45" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="24" cy="30" rx="10" ry="8" fill="#A9784F"/>
+  </g>`;
+}
+function cow(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="30" rx="34" ry="6" fill="rgba(0,0,0,.12)"/>
+    <rect x="-24" y="4" width="10" height="24" rx="3" fill="#fff"/><rect x="14" y="4" width="10" height="24" rx="3" fill="#fff"/>
+    <ellipse cx="0" cy="0" rx="34" ry="20" fill="#fff"/>
+    <ellipse cx="-10" cy="4" rx="9" ry="7" fill="#26222C"/><ellipse cx="10" cy="-6" rx="7" ry="6" fill="#26222C"/>
+    <circle cx="28" cy="-10" r="14" fill="#fff"/>
+    <ellipse cx="34" cy="-6" rx="5" ry="4" fill="#F0C9A0"/>
+    <circle cx="24" cy="-14" r="1.6" fill="#3B2F45"/><circle cx="33" cy="-14" r="1.6" fill="#3B2F45"/>
+    <path d="M18 -22 L14 -30 M34 -24 L36 -32" stroke="#EDEDED" stroke-width="4" stroke-linecap="round"/>
+  </g>`;
+}
+function giant(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="90" rx="46" ry="8" fill="rgba(0,0,0,.15)"/>
+    <rect x="-20" y="40" width="16" height="46" rx="4" fill="#E6AE83"/><rect x="6" y="40" width="16" height="46" rx="4" fill="#E6AE83"/>
+    <ellipse cx="-12" cy="88" rx="14" ry="5" fill="#5B4636"/><ellipse cx="14" cy="88" rx="14" ry="5" fill="#5B4636"/>
+    <ellipse cx="0" cy="10" rx="42" ry="34" fill="#7BB37A"/>
+    <circle cx="0" cy="-38" r="26" fill="#E6AE83"/>
+    <path d="M-24 -46 Q0 -66 24 -46 Q24 -52 0 -56 Q-24 -52 -24 -46Z" fill="#4A2E1E"/>
+    <circle cx="-9" cy="-38" r="2.6" fill="#3B2F45"/><circle cx="9" cy="-38" r="2.6" fill="#3B2F45"/>
+    <path d="M-10 -24 Q0 -18 10 -24" stroke="#3B2F45" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+function beanstalkVine(cx,baseY,topY,width){
+  const steps=8; const dy=(baseY-topY)/steps;
+  let d = `M${cx} ${baseY}`;
+  let leaves='';
+  for(let i=1;i<=steps;i++){
+    const y=baseY-dy*i;
+    const x=cx+(i%2===0? width: -width);
+    d+= ` Q${cx} ${y+dy/2} ${x} ${y}`;
+    if(i<steps){
+      const lx = cx + (i%2===0? width*1.6: -width*1.6);
+      leaves+=`<ellipse cx="${lx}" cy="${y}" rx="16" ry="9" fill="#7BB37A" transform="rotate(${i%2===0?-20:20} ${lx} ${y})"/>`;
+    }
+  }
+  return `<path d="${d}" stroke="#5B8C3E" stroke-width="10" fill="none" stroke-linecap="round"/>${leaves}`;
+}
+function tvKnocked(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale}) rotate(-12)">
+    <rect x="-40" y="-26" width="80" height="52" rx="4" fill="#2B2B33"/>
+    <rect x="-34" y="-20" width="68" height="40" fill="#8FCBEA"/>
+  </g>`;
+}
+function goldenChicken(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <ellipse cx="0" cy="10" rx="16" ry="13" fill="#fff"/>
+    <circle cx="12" cy="-4" r="8" fill="#fff"/>
+    <path d="M18 -6 L26 -3 L18 0Z" fill="#E8A23E"/>
+    <ellipse cx="-6" cy="20" rx="8" ry="6" fill="#FFD166"/>
+  </g>`;
+}
+function harpMagic(cx,cy,scale){
+  return `<g transform="translate(${cx},${cy}) scale(${scale})">
+    <path d="M-20 20 Q-30 -30 0 -40 L10 -38 Q-14 -28 -8 20 Z" fill="#E8C34A"/>
+    ${[...Array(5)].map((_,i)=>`<line x1="${-16+i*5}" y1="16" x2="${-6+i*3}" y2="-30" stroke="#fff" stroke-width="1.4"/>`).join('')}
+  </g>`;
+}
+function marketBg(){
+  return `<rect width="380" height="560" fill="#FFE7BE"/>` +
+    [...Array(3)].map((_,i)=>`<polygon points="${20+i*130},260 ${70+i*130},220 ${120+i*130},260" fill="${i%2===0?'#E0483B':'#5B6EE1'}"/><rect x="${30+i*130}" y="260" width="80" height="60" fill="#fff" opacity="0.85"/>`).join('') +
+    grass('#DCEAC0',320);
+}
+
+const JOAO_ART = [
+  rectBg('#FFD98A','#FF9F5B')+sun(320,80,28)+houseBack()+joao(190,430,1.7,'stand')+phoneGlow(232,398,1.4),
+  bedroomWall()+bed(190,480,0.75)+joao(190,400,1.3,'stand')+phoneGlow(222,378,1.3),
+  rectBg('#F6E8D8','#E4CBA4')+marieta(140,430,1.3)+joao(250,430,1.3,'stand')+phoneGlow(272,398,1.2),
+  rectBg('#BEE6F5','#DFF3C8')+tree2(50,470,1)+tree2(330,470,1)+grass('#8CBF7E',420)+cow(150,440,1.1)+joao(240,420,1.3,'stand'),
+  marketBg()+golpista(240,420,1.3)+joao(140,430,1.3,'stand')+cow(90,455,0.7),
+  marketBg()+golpista(210,410,1.4)+joao(120,430,1.2,'stand'),
+  rectBg('#FFE7BE','#FFD98A')+houseBack()+joao(190,430,1.5,'stand')+cow(310,450,0.55),
+  rectBg('#F6E8D8','#E4CBA4')+marieta(140,430,1.4)+joao(250,430,1.2,'stand'),
+  marketBg()+golpista(150,420,1.1)+marieta(240,420,1.1),
+  bedroomWall()+bed(190,450,1.0)+joao(190,420,0.9,'stand'),
+  bedroomWall()+beanstalkVine(190,560,20,60)+starsField(12,380,220),
+  rectBg('#8FCBEA','#DFF3C8')+cloud(90,80,1.2,'#fff')+cloud(300,60,1.0,'#fff')+giant(190,420,1.6)+tvKnocked(300,470,0.8),
+  rectBg('#8FCBEA','#DFF3C8')+cloud(90,80,1.0,'#fff')+giant(190,400,1.7)+tvKnocked(280,480,1.0)+motionLines(120,400,1.3),
+  rectBg('#8FCBEA','#DFF3C8')+cloud(300,70,0.9,'#fff')+goldenChicken(90,440,1.2)+goldenChicken(150,460,1.0)+harpMagic(280,420,1.1)+joao(190,420,1.2,'run')+motionLines(140,420,1.2),
+  bedroomWall()+beanstalkVine(190,560,60,50)+motionLines(190,300,1.4)+joao(190,460,1.2,'stand'),
+  bedroomWall()+bed(190,470,0.85)+marieta(280,430,1.1)+joao(160,440,1.1,'stand'),
+];
+
 function buildPage(kind, opts){
   const el = document.createElement('div');
   el.className='page';
@@ -592,6 +741,7 @@ pages.push({el: buildPage('menu', {
     const items = [
       {icon:'🐾', title:'A Fuga de Kika e Pretinho', meta:'12 páginas', jump: 2},
       {icon:'🐺', title:'O Lobito do Boné Vermelho e a Chapeuzinho Má', meta:'15 páginas', jump: 14},
+      {icon:'🌱', title:'João Mané e o Pé de Feijão', meta:'15 páginas', jump: 31},
       {icon:'🌙', title:'A Lua Sumida', meta:'🔒 em breve', jump:null},
       {icon:'🦖', title:'O Dinossauro do Quintal', meta:'🔒 em breve', jump:null},
     ];
@@ -641,6 +791,8 @@ function addStory(texts, artArr, folder){
 const KIKA_START = addStory(KIKA_TEXTS, KIKA_ART, 'kika-e-pretinho');
 /* 14..30: O Lobito do Boné Vermelho e a Chapeuzinho Má */
 const LOBITO_START = addStory(LOBITO_TEXTS, LOBITO_ART, 'lobito-e-chapeuzinho');
+/* 31..47: João Mané e o Pé de Feijão */
+const JOAO_START = addStory(JOAO_TEXTS, JOAO_ART, 'joao-e-o-pe-de-feijao');
 
 /* ============ mount + engine ============ */
 const book = document.getElementById('book');
