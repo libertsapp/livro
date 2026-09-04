@@ -1,4 +1,4 @@
-const CACHE_NAME = 'antonella-estorinhas-v3';
+const CACHE_NAME = 'antonella-estorinhas-v4';
 
 const CORE_ASSETS = [
   './',
