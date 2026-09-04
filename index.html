@@ -182,6 +182,24 @@
     color: rgba(255,255,255,.5); letter-spacing:.02em; pointer-events:none;
     text-shadow: 0 1px 2px rgba(0,0,0,.45);
   }
+
+  /* ---- navegação por seta: só aparece em desktop (mouse com hover) ---- */
+  .desktop-nav-btn{
+    display:none;
+    position:fixed; top:50%; transform:translateY(-50%);
+    width:52px; height:52px; border-radius:50%; border:none;
+    background: rgba(0,0,0,.32); color:#fff; font-size:20px;
+    align-items:center; justify-content:center;
+    cursor:pointer; z-index:18;
+    transition: background .2s, opacity .2s;
+  }
+  .desktop-nav-btn:hover{ background: rgba(0,0,0,.55); }
+  .desktop-nav-btn:disabled{ opacity:.2; cursor:default; }
+  .desktop-nav-btn.prev{ left:18px; }
+  .desktop-nav-btn.next{ right:18px; }
+  @media (hover:hover) and (pointer:fine){
+    .desktop-nav-btn{ display:flex; }
+  }
 </style>
 </head>
 <body>
@@ -199,6 +217,9 @@
   Pra instalar: toque em <strong>Compartilhar</strong> <span style="font-size:15px;">&#8679;</span> e depois em <strong>"Adicionar à Tela de Início"</strong>.
   <div style="margin-top:8px;"><button id="iosHintClose" style="background:rgba(255,255,255,.15); border:none; color:#fff; padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer;">entendi</button></div>
 </div>
+<button class="desktop-nav-btn prev" id="prevDesktopBtn" title="Página anterior" aria-label="Página anterior">&#10094;</button>
+<button class="desktop-nav-btn next" id="nextDesktopBtn" title="Próxima página" aria-label="Próxima página">&#10095;</button>
+
 <div class="progress-dots" id="dots"></div>
 <div class="app-credit">By: Heleno Vilela &middot; Ver: 1.1</div>
 
@@ -496,7 +517,7 @@ const LOBITO_ART = [
   rectBg('#241F4A','#161331')+starsField(20,380,300)+moonScene(300,80,30)+cottage(190,480,0.7)
 ];
 
-
+function buildPage(kind, opts){
   const el = document.createElement('div');
   el.className='page';
   const face = document.createElement('div');
@@ -618,6 +639,8 @@ const dotEls = Array.from(dotsWrap.children);
 
 let current = 0;
 const homeBtn = document.getElementById('homeBtn');
+const prevDesktopBtn = document.getElementById('prevDesktopBtn');
+const nextDesktopBtn = document.getElementById('nextDesktopBtn');
 
 function render(){
   pageEls.forEach((el,i)=>{
@@ -626,6 +649,8 @@ function render(){
   });
   dotEls.forEach((d,i)=> d.classList.toggle('active', i===current));
   homeBtn.style.display = current>=2 ? 'flex' : 'none';
+  prevDesktopBtn.disabled = current===0;
+  nextDesktopBtn.disabled = current===pageEls.length-1;
 }
 function next(){ if(current<pageEls.length-1){ current++; render(); } }
 function prev(){ if(current>0){ current--; render(); } }
@@ -634,6 +659,8 @@ function jumpTo(i){ current = Math.max(0, Math.min(pageEls.length-1, i)); render
 render();
 
 homeBtn.addEventListener('click', ()=> jumpTo(1));
+prevDesktopBtn.addEventListener('click', prev);
+nextDesktopBtn.addEventListener('click', next);
 
 /* ---- swipe (touch) ---- */
 const app = document.getElementById('app');
