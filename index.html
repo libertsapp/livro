@@ -175,6 +175,13 @@
     width:5px; height:5px; border-radius:50%; background:rgba(255,255,255,.35);
   }
   .progress-dots span.active{ background:#fff; width:16px; border-radius:3px; }
+
+  .app-credit{
+    position:fixed; left:14px; bottom: max(8px, env(safe-area-inset-bottom));
+    z-index:15; font-family:'Quicksand',sans-serif; font-size:9.5px;
+    color: rgba(255,255,255,.5); letter-spacing:.02em; pointer-events:none;
+    text-shadow: 0 1px 2px rgba(0,0,0,.45);
+  }
 </style>
 </head>
 <body>
@@ -193,6 +200,7 @@
   <div style="margin-top:8px;"><button id="iosHintClose" style="background:rgba(255,255,255,.15); border:none; color:#fff; padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer;">entendi</button></div>
 </div>
 <div class="progress-dots" id="dots"></div>
+<div class="app-credit">By: Heleno Vilela &middot; Ver: 1.1</div>
 
 <script>
 /* ============ SVG helper art (fallback enquanto as imagens reais nao estao hospedadas) ============ */
